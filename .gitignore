@@ -1,10 +1,58 @@
-.venv/
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.ruff_cache/
+# Secrets and credentials
 .env
 .env.*
 !.env.example
-.DS_Store
+*credentials*.json
+*credentials*.yaml
+*credentials*.yml
+*secret*.json
+*.pem
+*.key
+*.p12
+*.pfx
+.netrc
+.secrets/
+credentials/
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.cache/
+.ipynb_checkpoints/
+# Build and generated output
+build/
+dist/
+*.egg-info/
 latest.zip
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.log
+output/
+outputs/
+generated/
+artifacts/
+tmp/
+# Local data and model weights (keep supplied course PDFs trackable)
+data/local/
+data/raw/
+data/large/
+uploads/
+models/
+*.sqlite
+*.sqlite3
+*.db
+*.parquet
+*.arrow
+*.pt
+*.pth
+*.safetensors
+# Editor and operating system
+.DS_Store
+.idea/
