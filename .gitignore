@@ -56,3 +56,16 @@ models/
 # Editor and operating system
 .DS_Store
 .idea/
+
+# Local course workspace material and study notes
+.env.example
+AGENTS.md
+archive/
+course-material/
+exercises/README.md
+notes/
+progress.md
+project/
+references.md
+setup/
+weeks/
