@@ -6,6 +6,8 @@ COPY pyproject.toml uv.lock ./
 RUN pip install --no-cache-dir uv \
     && uv sync --frozen --no-dev
 
+RUN uv run --no-dev python -m nltk.downloader punkt_tab
+
 COPY main.py ./
 
 EXPOSE 8000

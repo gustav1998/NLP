@@ -1,0 +1,13 @@
+services: 
+    grobid:
+        image: "grobid/grobid:0.9.0-crf"
+        ports:
+          - "127.0.0.1:8070:8070"
+    api:
+        build: .
+        environment: 
+          GROBID_URL: "http://grobid:8070"
+        ports: 
+          - "127.0.0.1:8000:8000"
+        depends_on:
+          - grobid

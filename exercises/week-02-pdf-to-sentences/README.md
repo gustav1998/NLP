@@ -1,6 +1,6 @@
 # Week 2 PDF-to-sentences service
 
-This project is a FastAPI service that accepts a PDF upload and returns the extracted text split into sentences.
+This project is a FastAPI service that accepts a PDF upload and returns sentences extracted from the document body by GROBID.
 
 ## Requirements
 
@@ -22,16 +22,16 @@ The test uploads `2303.15133.pdf` and checks that the response contains the requ
 
 ## Run locally
 
-Start the API on port 8000:
+Start GROBID first:
+
+```sh
+docker compose up -d grobid
+```
+
+Then start the API on port 8000:
 
 ```sh
 uv run uvicorn main:app --reload
-```
-
-If port 8000 is already in use, choose another host port:
-
-```sh
-uv run uvicorn main:app --reload --port 8001
 ```
 
 Upload a PDF from a second terminal:
@@ -49,21 +49,33 @@ The service returns JSON in this form:
 
 The interactive API documentation is available at `/docs`.
 
-## Run with Docker
+## Run with Docker Compose
 
-Build and start the service:
+Build and start both the API and GROBID:
 
 ```sh
-docker build -t week-02-pdf-to-sentences .
-docker run --rm -p 8000:8000 week-02-pdf-to-sentences
+docker compose up --build
 ```
 
-Then use the same `curl` request shown above. The container listens on port 8000.
+The API is available at `http://127.0.0.1:8000`, and GROBID is exposed locally at `http://127.0.0.1:8070`. The two containers communicate over the private Compose network. Then use the same `curl` request shown above.
+
+Stop and remove the containers and Compose network with:
+
+```sh
+docker compose down
+```
+
+On Apple Silicon with Colima, GROBID needed an 8 GiB virtual-machine memory allocation in this setup:
+
+```sh
+colima stop
+colima start --memory 8 --cpu 4
+```
 
 ## Implementation
 
-The service reads uploaded PDF bytes with PyMuPDF and uses NLTK sentence tokenization. No external Web service is used.
+The FastAPI service sends uploaded PDF bytes asynchronously to the GROBID container. GROBID returns TEI XML with sentence elements from the document body. The API parses those elements, normalizes whitespace and returns the sentences as JSON. All processing uses services in the local Compose setup; no external Web service is used.
 
 ## Limitations
 
-The current implementation extracts all text in reading order. It does not yet identify and remove headers, footers, references or other non-body content from every possible PDF layout. PDFs without a text layer may require OCR, which is outside this implementation.
+PDF extraction depends on document structure and GROBID's models. Complex layouts, lists, URLs, genuine hyphens and layout hyphenation may produce imperfect sentence text. PDFs without a usable text layer may require OCR, which is outside this exercise.

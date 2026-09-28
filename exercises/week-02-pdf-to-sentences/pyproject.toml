@@ -6,6 +6,8 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "httpx2>=2.13.0",
     "nltk>=3.10.3",
     "pymupdf>=1.28.2",
     "pypdf>=6.18.0",

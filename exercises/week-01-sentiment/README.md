@@ -53,10 +53,20 @@ Build the image and start a container:
 
 ```sh
 docker build -t sentiment-api .
-docker run --rm -p 8000:8000 sentiment-api
+docker run --rm -p 127.0.0.1:8000:8000 sentiment-api
 ```
 
 The container serves the same Swagger documentation and API endpoint on port 8000. Stop it with `Ctrl+C`.
+
+## Verified result
+
+Verified on 24 September 2026:
+
+- `uv run pytest -q`: 4 tests passed.
+- The rebuilt `sentiment-api:latest` image is 129 MB according to `docker image ls`, below the required 200 MB limit.
+- The running container returned scores `3`, `-3` and `-3` for the three required examples.
+- A request without `text` returned HTTP 422.
+- `/docs` and `/openapi.json` both returned HTTP 200.
 
 ## API example
 

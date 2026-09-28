@@ -1,9 +1,9 @@
 from pathlib import Path
+import pytest
 
 from fastapi.testclient import TestClient
 
-from main import app
-
+from main import app, clean_text
 
 client = TestClient(app)
 PDF_PATH = (
@@ -11,6 +11,18 @@ PDF_PATH = (
     / "course-material/official/week-02/2303.15133.pdf"
 )
 
+def test_clean_text_joins_broken_word():
+    text = "dis-\nplay"
+    assert clean_text(text) == "display"
+
+def test_clean_text_preserves_word_spacing():
+    text = "the\ncourse"
+    assert clean_text(text) == "the course"
+
+@pytest.mark.xfail(reason= "the current rule cannot distinguish genuine hyphens from layout hyphenation.")
+def test_clean_text_preserves_genuine_hyphen():
+    text = "work-in-\nprogress"
+    assert clean_text(text) == "work-in-progress"
 
 def test_extract_sentences():
     with PDF_PATH.open("rb") as pdf_file:
